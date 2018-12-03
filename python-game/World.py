@@ -30,8 +30,11 @@ class World(Frame):
         for x in range(0, self.size):
             row = []
             for y in range(0, self.size):
-                state = random.randint(0, 1)
-                row.append(Cell(x, y, state, self.canvas, cellSize))
+                tempState = random.randint(0, 3)
+                # Simple check to increase the probability that a cell starts dead
+                if (tempState == 2 or tempState == 3):
+                    tempState = 0
+                row.append(Cell(x, y, tempState, self.canvas, cellSize))
             self.cells.append(row)
 
     def resetGeneration(self):
