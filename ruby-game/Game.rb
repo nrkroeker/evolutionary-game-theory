@@ -3,25 +3,30 @@ require "tk"
 
 # Class handling the construction of the necessary elements and the Tk window
 class Game
+    # Method to update the size label with correct formatting, e.g. 25x25
     def updateSizeLabel
         @sizeText.value = "#{@world.size}x#{@world.size}"
     end
     
+    # Method to increase the size of the grid
     def increaseGrid
         @world.updateSize(1)
         updateSizeLabel
     end
     
+    # Method to decrease the size of the grid
     def decreaseGrid
         @world.updateSize(-1)
         updateSizeLabel
     end
     
+    # Method to step to the next generation manually
     def nextGeneration
         @world.increaseGeneration
         @genText = @world.generation
     end
     
+    # Method to initialize auto generation, only if it hasn't already started
     def startAutoGeneration
         if (not @autoGenerating)
             @autoGenerating = true
@@ -29,20 +34,24 @@ class Game
         end
     end
     
+    # Recursive method for auto generation
     def generation
         nextGeneration
         @game_running = @root.after(100) { generation }
     end
         
+    # Method to stop auto generation by cancelling the function call
     def stopAutoGeneration
         @root.after_cancel(@game_running)
         @autoGenerating = false
     end
     
+    # Method to set all cells to a random state
     def randomGen
         @world.generateCells
     end
 
+    # Method to clear all cells back to dead state
     def clearGrid
         @world.setCells(0)
     end
@@ -58,6 +67,7 @@ class Game
         @world = World.new(25, @root)
         @world.canvas.grid(:row=>0, :column=>0)
 
+        # Declare TkVariable properties for dynamic labels
         @sizeText = TkVariable.new
         @sizeText.value = "25 x 25"
         @genText = TkVariable.new

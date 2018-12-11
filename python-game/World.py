@@ -13,17 +13,20 @@ class World(Frame):
         self.cells = []
         self.size = size
 
+        # Create initial canvas for cell rendering
         self.canvas = Canvas(self, width=self.canvasSize, height=self.canvasSize, bg="white", highlightthickness=0, relief="groove")
         self.canvas.grid(row=0, column=0)
 
-    
+    # Method to change the size by some increment, positive or negative
     def updateSize(self, increment):
         self.size += increment
         self.generateCells()
 
+    # Regenerate all cells on the canvas
     def generateCells(self):
         self.canvas.delete("all")
 
+        # How wide/tall in pixels the cell needs to be
         cellSize = self.canvasSize / self.size
 
         self.cells = []
@@ -37,15 +40,18 @@ class World(Frame):
                 row.append(Cell(x, y, tempState, self.canvas, cellSize))
             self.cells.append(row)
 
+    # Iterate over cells and set all states to the given value
     def setCells(self, state):
         self.generation = 0
         for x in range(0, self.size):
             for y in range(0, self.size):
                 self.cells[x][y].setState(state)
 
+    # Set generation value back to 0
     def resetGeneration(self):
         self.generation = 0
 
+    # Increase generation manually by one step
     def increaseGeneration(self):
         self.generation += 1
         for x in range(0, self.size):
@@ -57,13 +63,14 @@ class World(Frame):
                 elif (cell.state == 1 and n != 2 and n != 3):
                     cell.toggleState()
 
-    """ Determine the number of live cells adjacent to a given cell """
+    # Determine the number of live cells adjacent to a given cell
     def checkCell(self, i, j):
         s = 0 # Count of live adjacent cells
         for x in [i-1, i, i+1]:
             for y in [j-1, j, j+1]:
+                # Skip the current point
                 if(x == i and y == j):
-                    continue # Skip the current point
+                    continue
                 if (x != self.size and y != self.size):
                     s += self.cells[x][y].state
                 # If adjacent cells are off the grid, loop around to other size

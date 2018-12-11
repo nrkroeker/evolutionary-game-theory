@@ -8,6 +8,7 @@ class Game(Tk):
         Tk.__init__(self, parent)
         self.parent = parent
         self.title("Game of Life")
+        # Declare Tk variables to dynamically update labels
         self.gridSize = StringVar()
         self.generationLabel = StringVar()
         self.autoGenerating = False
@@ -16,6 +17,7 @@ class Game(Tk):
         self.world = World(self, 25)
         self.world.grid(row=0, column=0)
 
+        # Set initial grid values
         self.gridSize.set("25x25")
         self.generationLabel.set("0")
         self.world.generateCells()
@@ -53,39 +55,48 @@ class Game(Tk):
 
         mainloop()
     
+    # Method to update the label for grid size
     def updateSizeLabel(self):
         newSize = str(self.world.size)
         self.gridSize.set(newSize + "+" + newSize)
 
+    # Method to increase the size of the grid
     def increaseGrid(self):
         self.world.updateSize(1)
         self.updateSizeLabel()
 
+    # Method to decrease the size of the grid
     def decreaseGrid(self):
         self.world.updateSize(-1)
         self.updateSizeLabel()
 
+    # Method to manually step to the next generation
     def nextGeneration(self):
         self.world.increaseGeneration()
         self.generationLabel.set(str(self.world.generation))
 
+    # Method to initialize auto generation only if it isn't already running
     def startAutoGeneration(self):
         if (not self.autoGenerating):
             self.autoGenerating = True
             self.generation()
 
+    # Recursive method to maintain auto generation
     def generation(self):
         self.nextGeneration()
         global game_running
         game_running = self.after(100, self.generation)
         
+    # Method to cancel additional Tk function call and subsequent generation
     def stopAutoGeneration(self):
         self.after_cancel(game_running)
         self.autoGenerating = False
 
+    # Method to set all cells in the grid to a random state
     def randomizeGen(self):
         self.world.generateCells()
 
+    # Method to set all cells as dead
     def clearGrid(self):
         self.world.setCells(0)
         self.generationLabel.set(str(self.world.generation))
