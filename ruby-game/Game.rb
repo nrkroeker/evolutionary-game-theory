@@ -23,7 +23,7 @@ class Game
     # Method to step to the next generation manually
     def nextGeneration
         @world.increaseGeneration
-        @genText = @world.generation
+        @genText.value = @world.generation
     end
     
     # Method to initialize auto generation, only if it hasn't already started
@@ -49,11 +49,15 @@ class Game
     # Method to set all cells to a random state
     def randomGen
         @world.generateCells
+        @world.resetGeneration
+        @genText.value = @world.generation
     end
 
     # Method to clear all cells back to dead state
     def clearGrid
         @world.setCells(0)
+        @world.resetGeneration
+        @genText.value = @world.generation
     end
 
     def initialize
