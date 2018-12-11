@@ -14,7 +14,7 @@ class Game(Tk):
 
         # Default grid size 25
         self.world = World(self, 25)
-        self.world.grid(row=0, column=0, pady=20, padx=50)
+        self.world.grid(row=0, column=0)
 
         self.gridSize.set("25x25")
         self.generationLabel.set("0")
@@ -24,29 +24,32 @@ class Game(Tk):
         actions = Frame(self)
         actions.grid(row=1, column=0, pady=10)
 
-        reset = Button(actions, text="Reset", command=self.resetGen)
-        reset.grid(row=0, column=0, padx=10)
+        randomize = Button(actions, text="Randomize", command=self.randomizeGen)
+        randomize.grid(row=0, column=0, padx=10)
+
+        clear = Button(actions, text="Clear", command=self.clearGrid)
+        clear.grid(row=0, column=1, padx=10)
 
         startGen = Button(actions, text="Start", command=self.startAutoGeneration)
-        startGen.grid(row=0, column=1, padx=10)
-
-        startGen = Button(actions, text="Stop", command=self.stopAutoGeneration)
         startGen.grid(row=0, column=2, padx=10)
 
+        startGen = Button(actions, text="Stop", command=self.stopAutoGeneration)
+        startGen.grid(row=0, column=3, padx=10)
+
         nextGen = Button(actions, text="Next Generation", command=self.nextGeneration)
-        nextGen.grid(row=0, column=3, padx=10)
+        nextGen.grid(row=0, column=4, padx=10)
 
         gen = Label(actions, textvariable=self.generationLabel)
-        gen.grid(row=0, column=4, padx=10)
+        gen.grid(row=0, column=5, padx=10)
 
         smaller = Button(actions, text="-", command=self.decreaseGrid)
-        smaller.grid(row=0, column=5, ipadx=5, padx=10)
+        smaller.grid(row=0, column=6, ipadx=5, padx=10)
 
         bigger = Button(actions, text="+", command=self.increaseGrid)
-        bigger.grid(row=0, column=6, ipadx=5, padx=10)
+        bigger.grid(row=0, column=7, ipadx=5, padx=10)
 
         size = Label(actions, textvariable=self.gridSize)
-        size.grid(row=0, column=7)
+        size.grid(row=0, column=8)
 
         mainloop()
     
@@ -74,11 +77,15 @@ class Game(Tk):
     def generation(self):
         self.nextGeneration()
         global game_running
-        game_running = self.after(5, self.generation)
+        game_running = self.after(100, self.generation)
         
     def stopAutoGeneration(self):
         self.after_cancel(game_running)
         self.autoGenerating = False
 
-    def resetGen(self):
+    def randomizeGen(self):
         self.world.generateCells()
+
+    def clearGrid(self):
+        self.world.setCells(0)
+        self.generationLabel.set(str(self.world.generation))

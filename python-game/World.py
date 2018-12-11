@@ -37,6 +37,12 @@ class World(Frame):
                 row.append(Cell(x, y, tempState, self.canvas, cellSize))
             self.cells.append(row)
 
+    def setCells(self, state):
+        self.generation = 0
+        for x in range(0, self.size):
+            for y in range(0, self.size):
+                self.cells[x][y].setState(state)
+
     def resetGeneration(self):
         self.generation = 0
 
@@ -58,12 +64,12 @@ class World(Frame):
             for y in [j-1, j, j+1]:
                 if(x == i and y == j):
                     continue # Skip the current point
-                if(x != self.size and y != self.size):
+                if (x != self.size and y != self.size):
                     s += self.cells[x][y].state
                 # If adjacent cells are off the grid, loop around to other size
-                elif(x == self.size and y != self.size):
+                elif (x == self.size and y != self.size):
                     s += self.cells[0][y].state
-                elif(x != self.size and y == self.size):
+                elif (x != self.size and y == self.size):
                     s += self.cells[x][0].state
                 else:
                     s += self.cells[0][0].state
